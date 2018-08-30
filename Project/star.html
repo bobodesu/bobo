@@ -1,0 +1,358 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="viewport" content="user-scalable=no"><!--禁止移动端缩放-->
+<style>
+*{
+	margin:0;
+	padding:0;
+	
+}
+#canvas_star{
+	background-color:#000;
+}
+
+
+#debug{
+	height:70vh;
+	width:70vw;
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	background-color:rgba(255,255,255,0.7);
+	padding:5px;
+	display:none;
+	font-size:2.2vh;
+	overflow-y:scroll;
+}
+@media screen and (max-width: 1080px){
+	#debug{
+		font-size:2.6vw;
+	}
+}
+footer{
+	font-size:0.8em;
+	text-align:center;
+}
+#debug_display{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:20vw;
+	height:5vh;
+	font-size:1.2em;
+}
+input{
+	font-size:1em;
+}
+</style>
+<script>
+//参数信息
+var set={
+	"fps":35,						//每毫秒刷新一帧
+	"starnum":100,					//点数量，int
+	"starsize":4,					//点半径，int
+	"starcolor":"#fff",				//点颜色，遵循css语法
+	"starmove":60,					//每次任务最大移动距离
+	"startofps":20,					//任务完成达到的帧数
+	"linewidth":2,					//线粗，画布单位，int
+	"linecolor":[0,0,0],			//相对线颜色值，取值为(-40,40)int
+	"linemin":30					//线最低灰度，低于此值不绘制
+	
+}
+
+function linealpha(x){//输入长度，返回灰度值
+	switch(window.calcline){
+		case "1"://一次函数 -1.5*x+255
+			return Math.floor((-1.5)*x+255);
+		break;
+		case "2"://分式函数 11400/(x+40)-30
+			return Math.floor(11400/(x+40)-30);
+		break;
+		case "3"://二次函数 -0.01*(x^2)+255
+			//二次函数形式：f(x)=ax^2+bx+c
+			return Math.floor(-0.01*Math.pow(x,2)+255);
+		break;
+		case "4"://高斯函数 255*e^(-(x)^2/(150)^2)
+			//高斯函数形式：f(x)=ae^(-((a-b)^2)/2c^2)
+			//a为峰值，b为顶点横坐标，c为过渡宽度
+			return Math.floor(255*Math.pow(Math.E,-(Math.pow(x,2)/22500)));
+		break;
+		case "5"://cos函数 cos(x*0.016)*128+128
+			if(x<196){
+			return Math.cos(x*0.014)*128+128;
+			}else{return 0;}
+		break;
+		default:
+			return 0;
+	}
+
+}
+function ready(starnum){
+	//canvas before
+	window.stardrew=document.getElementById("canvas_star").getContext("2d");
+	
+
+	
+	//creat star
+	for(var i=starnum;i>0;i--){
+		star.push([
+			Math.floor( starsize[0]*Math.random() ),
+			Math.floor( starsize[1]*Math.random() )
+		]);
+	}
+	
+
+}
+function change(){
+	var i;
+	if(window.tofps==0 || window.tofps==null){
+		//开始下一个任务
+		window.tofps=set.startofps;
+		window.star_start=[];
+		window.star_end=[];
+		
+		//处理队列
+		for(;duilie.length!=0;){
+			var temp=duilie.shift();
+			if(temp.type=="add"){
+				star.push(temp.value);
+			}
+			if(temp.type=="del"){
+				star.pop();
+			}
+		}
+	
+		
+		for(i in star){
+			star_start[i]=[
+				star[i][0],
+				star[i][1]
+			];
+			star_end[i]=[
+				star[i][0]+(Math.random()*(set.starmove*2)-set.starmove),
+				star[i][1]+(Math.random()*(set.starmove*2)-set.starmove)
+			];
+			
+			//几个if用来检测小球不会跑出去
+			if(star_end[i][0]<0 || star_end[i][0]>starsize[0]){
+				if(star_end[i][0]<0){
+					star_end[i][0]=0;
+				}else{
+					star_end[i][0]=starsize[0];
+				}
+			}
+			if(star_end[i][1]<0 || star_end[i][1]>starsize[1]){
+				if(star_end[i][1]<0){
+					star_end[i][1]=0;
+				}else{
+					star_end[i][1]=starsize[1];
+				}
+			}
+		}
+	}
+	
+	//下一帧
+	tofps--;
+	for(i in star){
+		star[i][0]+=(star_end[i][0]-star_start[i][0])/set.startofps;
+		star[i][1]+=(star_end[i][1]-star_start[i][1])/set.startofps;
+	}
+	sizechange();
+	redrew();
+}
+function redrew(){
+	var i,j;
+	//xian
+	var linelong,linecolor;
+	
+
+	for(i in star){
+		for(j=star.length-1;j>i;j--){//j-1的原因是数组从0开始计数
+			linelong=
+				Math.sqrt(
+					Math.pow(star[i][0]-star[j][0],2)+
+					Math.pow(star[i][1]-star[j][1],2)
+				);
+			//两点之间距离公式：横坐标相减的平方加上纵坐标相减的平方总和的平方根
+			//console.log(star[i],star[j],linelong);
+			
+			//x为长度  y为透明度 255为最亮 0为不亮
+			linecolor=linealpha(linelong);
+			if(linecolor>215){linecolor=215}
+			if(linecolor>set.linemin){
+				stardrew.beginPath();
+				stardrew.moveTo(star[i][0],star[i][1]);
+				stardrew.lineTo(star[j][0],star[j][1]);
+				//stardrew.strokeStyle="rgba(255,255,255,"+linecolor+")";
+				stardrew.strokeStyle="rgb("+
+					(linecolor+set.linecolor[0])+","+
+					(linecolor+set.linecolor[1])+","+
+					(linecolor+set.linecolor[2])+
+				")";
+				stardrew.lineWidth=set.linewidth;
+				stardrew.stroke();
+				stardrew.closePath();
+			}
+		}
+	}
+	
+	//userline
+	if(usersize[0][0]!=null){
+		for(i in star){
+			for(j in usersize){
+				linelong=
+					Math.sqrt(
+						Math.pow(star[i][0]-usersize[j][0],2)+
+						Math.pow(star[i][1]-usersize[j][1],2)
+					);
+				
+				linecolor=linealpha(linelong);
+				if(linecolor>215){linecolor=215}
+				if(linecolor>set.linemin){
+					stardrew.beginPath();
+					stardrew.moveTo(star[i][0],star[i][1]);
+					stardrew.lineTo(usersize[j][0],usersize[j][1]);
+					stardrew.strokeStyle="rgb("+
+						(linecolor+set.linecolor[0])+","+
+						(linecolor+set.linecolor[1])+","+
+						(linecolor+set.linecolor[2])+
+					")";
+					stardrew.lineWidth=set.linewidth;
+					stardrew.stroke();
+					stardrew.closePath();
+				}
+			}
+		}
+	}
+	
+	//dian
+	for(i in star){
+		stardrew.beginPath();
+		stardrew.arc(star[i][0],star[i][1],set.starsize,0,360);
+		stardrew.fillStyle=set.starcolor;
+		stardrew.fill();
+		stardrew.closePath();
+	}
+}
+function stop(){
+	clearInterval(starloop);
+}
+function sizechange(){
+	window.starsize=[document.body.clientWidth,document.body.clientHeight];
+	document.getElementById("canvas_star").width=starsize[0];
+	document.getElementById("canvas_star").height=starsize[1];
+}
+function addStar(num=1){
+	for(var i=num;i!=0;i--){
+		duilie.push({"type":"add","value":[
+			Math.floor( starsize[0]*Math.random() ),
+			Math.floor( starsize[1]*Math.random() )
+		]});
+	}
+}
+function delStar(num=1){
+	for(var i=num;i!=0;i--){
+		duilie.push({"type":"del","value":""});
+	}
+}
+function touch(e){
+	//usersize=[e.touches[0].clientX,e.touches[0].clientY];
+	
+	usersize=[];
+	for(var i in e.touches){
+		usersize.push([e.touches[i].clientX,e.touches[i].clientY]);
+	}
+	
+}
+
+window.onresize=function(){sizechange();redrew();}
+window.onload=function(){
+	window.usersize=[[null,null]];
+	window.starsize=[document.body.clientWidth,document.body.clientHeight];
+	window.star=new Array();
+	window.tofps=null;
+	window.duilie=new Array();
+	window.calcline="1";
+	ready(set.starnum);
+	sizechange();
+	//debug();
+	window.starloop=setInterval(function(){
+		change();
+	},set.fps);
+	
+	
+	window.onmousemove=function(e){//鼠标滑动事件
+		usersize=[[e.clientX,e.clientY]];
+	}
+	document.addEventListener('touchmove',touch, false);//注册移动端手指滑动事件
+	document.addEventListener('touchstart',touch, false);
+	document.addEventListener('touchend',function(){usersize=[[null,null]];}, false);
+	//document.addEventListener('onmouseout',,false)
+}
+</script>
+</head>
+<body>
+<canvas id="canvas_star"></canvas>
+<script>
+function debug_display(e){
+	if(e.value=="显示"){
+		e.value="隐藏";
+		document.getElementById("debug").style.display="block";
+	}else{
+		e.value="显示";
+		document.getElementById("debug").style.display="none";
+	}
+}
+function debug_change(){
+	set.starcolor=document.getElementById('s_color').value;
+	set.starsize=document.getElementById('s_size').value;
+	set.starmove=document.getElementById('s_move').value;
+	set.startofps=document.getElementById('s_tofps').value;
+	set.linewidth=document.getElementById('l_width').value;
+	set.linemin=document.getElementById('l_min').value;
+	set.linecolor=[parseInt(document.getElementById('l_color1').value),parseInt(document.getElementById('l_color2').value),parseInt(document.getElementById('l_color3').value)];
+}
+read_calc=
+	"线灰度计算算法说明：\n"+
+	"x为长度 255为最亮 0为不亮\n"+
+	"1.一次函数，比较均衡一些，f(x)=-1.5*x+255\n"+
+	"2.分式函数，效果比较暗淡，f(x)=11400/(x+40)-30\n"+
+	"3.二次函数，效果会比前两种会更亮些，f(x)=-0.01*(x^2)+255\n"+
+	"4.高斯函数，各取分式函数和二次函数的优点，f(x)=255*e^(-(x)^2/(150)^2)\n"+
+	"5.cos函数，f(x)=cos(x*0.016)*128+128"
+	;
+</script>
+<input id="debug_display" type="button" value="显示" onclick="debug_display(this)">
+<div id="debug">
+点颜色(css语法)：<input size="13" type="text" id="s_color" value="#fff"><br>
+点半径：<input size="13" type="text" id="s_size" value="3"><br>
+点每次任务最大距离：<input size="2" type="text" id="s_move" value="60"><br>
+点任务完成帧数：<input size="2" type="text" id="s_tofps" value="30"><br>
+线粗：<input size="1" type="text" id="l_width" value="2"><br>
+线相对颜色：(-40至40之间整数)<br>&nbsp;&nbsp;r<input size="1" type="text" id="l_color1" value="0">g<input size="1" type="text" id="l_color2" value="0">b<input size="1" type="text" id="l_color3" value="0"><br>
+线最低灰度(0-255整数)：<input size="1" type="text" id="l_min" value="30"><br>
+
+<span style="font-size:0.8em;color:#f55">以上内容填写不当可能会导致页面卡顿</span>
+<br>
+<input style="width:20vw;height:8vh;font-size:1em;" type="button" value="应用" onclick="debug_change()"><br><br>
+<input id="debug_duilie" style="font-size:0.8em" size="1" type=text" value="20"><input style="width:13vw;height:5vh;font-size:0.6em;" type="button" value="添加点" onclick="addStar(document.getElementById('debug_duilie').value);"><input style="width:13vw;height:5vh;font-size:0.6em;" type="button" value="删除点" onclick="delStar(document.getElementById('debug_duilie').value);"><br>
+线灰度计算算法：
+<select onchange="window.calcline=this.value">
+	<option value="1">一次函数</option>
+	<option value="2">分式函数</option>
+	<option value="3">二次函数</option>
+	<option value="4">高斯函数</option>
+	<option value="5">cos函数</option>
+</select>
+<a href="javascript:void(0)" onclick="alert(read_calc)">说明>></a>&nbsp;<a href="http://zh.numberempire.com/graphingcalculator.php?functions=-0.01*(x%5E2)%2B255%2C-1.5*x%2B255%2C11400%2F(x%2B40)-30%2C255*e%5E(-(x)%5E2%2F(150)%5E2)%2Ccos(x*0.016)*128%2B128&xmin=0&xmax=300&ymin=0&ymax=300&var=x" target="_blank">函数图像>></a><br>
+<a href="javascript:void(0)" onclick="alert(star.length);">点数量>></a></a></a>
+<br><br>
+<footer>
+Posted by: liubo<br>
+Contact information:<a href="mailto:a1808297916@outlook.com">a1808297916@outlook.com</a>
+</footer>
+<br>
+</div>
+</body>
+</html>

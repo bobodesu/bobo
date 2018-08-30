@@ -1,0 +1,329 @@
+﻿<!doctype html>
+<html>
+<head>
+<link href="../css/main.css" rel="stylesheet" type="text/css">
+<meta charset="utf-8">
+<title>calc</title>
+<style type="text/css">
+#div{
+	width: 317px;
+	height: 356px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	transition: width 0.5s;
+	overflow: hidden;
+}
+.div {
+	-webkit-box-shadow: 1px 1px 14px -4px;
+	box-shadow: 1px 1px 14px -4px;
+	position: absolute;
+	border: 1px solid #000000;
+	border-radius: 4px;
+}
+div {
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+#cout {
+	margin-top: 15px;
+	margin-bottom: 9px;
+	width: 300px;
+	border: 1px solid #000000;
+	color: #000000;
+	background-color: #FFFFFF;
+	text-align: right;
+}
+.bottom {
+	padding-left: 20px;
+	padding-right: 20px;
+	width: 65px;
+	margin-bottom: 10px;
+	margin-left: 6px;
+	height: 43px;
+	color: #000000;
+	font-family: "微软雅黑", "等线", "黑体", "宋体";
+	font-size: 20px;
+	line-height: 43px;
+	margin-right: 0px;
+}
+#set {
+	float: right;
+	margin-right: 10px;
+	padding-right: 10px;
+	padding-left: 10px;
+	transition: color 0.5s;
+}
+#set:hover {
+	color: #BDBDBD;
+}
+#left {
+	width: 317px;
+	float: left;
+}
+#right {
+	transition: display 0.5s;
+}
+</style>
+<script>
+var num1="",num2="",type,n;//声明全局变量，num1上次计算结果，num2填写块,type运算符（2+ 3- 4* 5/），n为计次
+//function dragable(id){var d=document,o=d.getElementById(id),s=o.style,x,y,p='onmousemove';o.onmousedown=function(e){e=e||event;x=e.clientX-o.offsetLeft;y=e.clientY-o.offsetTop;d[p]=function(e){e=e||event;s.left=e.clientX-x+'px';s.top=e.clientY-y+'px'};d.onmouseup=function(){d[p]=null}}}
+//鼠标任意拖动函数
+function MoveDiv(id){var md_d=document,md_o=md_d.getElementById(id),md_s=md_o.style,md_x,md_y,md_p='onmousemove';md_o.onmousedown=function(md_e){md_e=md_e||event;md_x=md_e.clientX-md_o.offsetLeft;md_y=md_e.clientY-md_o.offsetTop;md_d[md_p]=function(md_e){md_e=md_e||event;md_s.left=md_e.clientX-md_x+'px';md_s.top=md_e.clientY-md_y+'px'};md_d.onmouseup=function(){md_d[md_p]=null}}}
+function cout(){//用于显示到输出显示内容
+	var display = document.getElementById("cout");
+/*		if(num2 == ""){
+			display.innerHTML = parseFloat(num1) ;
+		}else{
+			display.innerHTML = parseFloat(num2) ;
+		}
+*/	
+	//以上if()为xp系统自带计算器老旧显示方法
+	if(num1 == ""){
+		display.value = parseFloat(num2);
+		return;
+	}//指的是没有输入第二个数的情况
+	else{
+		if(type == 0){
+			if(num2 == ""){
+				display.value = "结果为" + num1;
+			}else{
+				display.value =  num1;
+			}
+		}//指的是按等于出结果的时候，没有运算符寄存和输入寄存
+		if(type != 0){
+			var temp_sign;
+			switch(type){
+				case 2: {temp_sign = "+"; break;}
+				case 3: {temp_sign = "-"; break;}
+				case 4: {temp_sign = "×"; break;}
+				case 5: {temp_sign = "÷"; break;}
+			}
+			if(num2 == ""){
+				display.value = num1 + temp_sign;
+			}else{
+				display.value = num1 + temp_sign + num2;
+			}
+		}
+	}
+}
+function numInput(num){
+	//规定数字为输入的数字
+	if(isNaN(num2 + String(num))){
+		return;
+	}else{
+		num2= num2 + String(num);
+	}
+	cout();
+}
+function numrun(){  //执行num1和num2用type运算符进行运算
+	switch(type){
+		case 2: {
+			num1 = parseFloat(num1) + parseFloat(num2);break;
+		}case 3: {
+			num1 = parseFloat(num1) - parseFloat(num2);break;
+		}case 4: {
+			num1 = parseFloat(num1) * parseFloat(num2);break;
+		}case 5: {  //!!!!!除法暂且不管除数为0的情况!!!!!!
+			num1 = parseFloat(num1) / parseFloat(num2);break;
+		}default: {
+			num1 = num2;break;
+			/*
+			遇到default的时候可能情况
+			在符号寄存器为0的情况下，输入寄存器有数字时按了运算符按钮
+			*/
+		}
+	}
+	num2 = ""; //清空num2填写块的数据
+	type = 0; //清空运算符
+}
+function signInput(num){
+	//规定1为小数点，2为+，3 - ，4 * ，5 / ，6 ± ，7 π ，8 C ，9回删 ， 0 =
+	//11乘方，12二次幂，13开方，14二次根，15Sin，16Cos，17Tan，18%，19 1/x，20 ！，21Ln(x)，22Lg(x)，23 e
+		var debug_str;
+		n = 0;	
+		switch(num){
+			case 1: {
+				if (num2.indexOf(".") == -1){ //判断是否已经有小数点
+					num2 = num2 + ".";
+				}
+			break;}case 2: {
+				//加法运算
+				if(num2 == ""){type = 2 ; return ;}
+				numrun();
+				type = 2;
+			break;}case 3: {
+				if(num2 == ""){type = 3 ; return ;}
+				numrun();
+				type = 3;
+			break;}case 4: {
+				if(num2 == ""){type = 4 ; return ;}
+				numrun();
+				type = 4;
+			break;}case 5: {
+				if(num2 == ""){type = 5 ; return ;}
+				numrun();
+				type = 5;
+			break;}case 6: {
+				if(num2 == ""){
+					num1 = -(num1);
+				}else{
+					num2 = -(num2);
+				}
+			break;}case 7: {
+				num2 = Math.PI;
+			break;}case 8: {
+				num1 = "";
+				num2 = "";
+				type = 0;
+			break;}case 9: {
+				num2 = num2.substr(0,num2.length-1);
+			break;}case 0: {
+				if(num2 == "")return;
+				numrun();
+			break;}
+		}
+		cout();
+}//函数为输入符号的处理
+
+function getcode(e){
+	var e = e || window.event;
+	if( typeof e.charCode == "number" ){
+	return e.charCode;
+	}else{
+	return e.keyCode; }}
+window.onkeypress = function(e){
+	var i=getcode(e);
+	window.debugcode=i;
+	switch(i){
+		case 48:case 49:case 50:
+		case 51:case 52:case 53:
+		case 54:case 55:case 56:case 57:
+			document.getElementById("a"+(i-48)).focus();
+			numInput(i-48);
+			break;//字母区的数字
+		case 42: document.getElementById("cheng").focus();signInput(4); break;// *
+		case 43: document.getElementById("jia").focus();signInput(2); break;// +
+		case 61: document.getElementById("deng").focus();signInput(0); break;// = xx
+		case 13: document.getElementById("deng").focus();signInput(0); break;
+		case 45: document.getElementById("jian").focus();signInput(3); break;// -
+		case 46: document.getElementById("dian").focus();signInput(1); break;// .
+		case 47: document.getElementById("chu").focus();signInput(5); break;// /
+		case 99: document.getElementById("re0").focus();signInput(8); break;// c
+		case 98: document.getElementById("back").focus();signInput(9); break;// ← xx
+	}
+}//当输入字符时的处理
+//以上给所有按钮添加快捷按键
+
+window.debugcode=0;
+window.debugother="none";
+window.debugrun = false;
+function debug(){
+	window.debugclose=setInterval("redebug();",100);
+}
+function redebug(){
+		if(debugrun==false){document.getElementById("debug").style.display="none";clearInterval(debugclose);}
+	var debuginput = document.getElementById("debug"),
+		debugcout,debug_i,
+	    debugtext = new Array("调试模式","输入的键代码:","num1:","num2: ","type:","other:");
+		debugtext[1]=debugtext[1]+window.debugcode;
+		debugtext[2]=debugtext[2]+num1;
+		debugtext[3]=debugtext[3]+num2;
+		switch(type){
+			case 0:{debugtext[4]=debugtext[4]+"none" ; break;}
+			case 2:{debugtext[4]=debugtext[4]+"+" ; break;}
+			case 3:{debugtext[4]=debugtext[4]+"-" ; break;}
+			case 4:{debugtext[4]=debugtext[4]+"×" ; break;}
+			case 5:{debugtext[4]=debugtext[4]+"÷" ; break;}
+			default:{debugtext[4]=debugtext[4]+type ; break;}
+		}
+		debugtext[5]=debugtext[5]+window.debugother;
+		
+		for(debug_i in debugtext){
+			debugcout = debugcout + "<br>" + debugtext[debug_i];
+		}
+		if(window.debug == debugcout){
+			return;
+		}
+		window.debug = debugcout
+		debuginput.innerHTML = debugcout;
+}
+function Menu(){
+	var menu_a = document.getElementById("right");
+	if(menu_a.style.display == "none"){
+		document.getElementById("div").style.width = "717px";
+		menu_a.style.display = "inline";
+	}else{
+		document.getElementById("div").style.width = "317px";
+		menu_a.style.display = "none";
+	}
+}
+</script>
+</head>
+
+<body>
+<div id="debug" class="div" style="height:200px; width:170px; display:none; position:absolute;"></div>
+<div id="div" class="div">
+<div id="left">
+<span>计算器</span><a href="#" 
+style="
+	text-decoration: none; 
+    font-size:8px; 
+    color:#ccc;
+" onClick="
+	if(debugrun==true){debugrun=false;return;}
+	debugrun=true;
+	document.getElementById('debug').style.display='inline';
+    MoveDiv('debug');
+	debug();
+"> debug</a>
+<a id="set" href="#" OnClick="Menu();">≡</a>
+<br/>
+<input type="text" id="cout" size="45" disabled="disabled">
+<hr size="1" width="307px" align="left"/>
+<input type="button" value="π" class="sign bottom" onClick="signInput(7);">
+<input id="re0" type="button" value="C" class="sign bottom" onClick="signInput(8);">
+<input id="back" type="button" value="←" class="sign bottom" onClick="signInput(9);">
+<input id="chu" type="button" value="÷" class="sign bottom" onClick="signInput(5);"><br>
+<input id="a7" type="button" value="7" class="num bottom" onClick="numInput(7);">
+<input id="a8" type="button" value="8" class="num bottom" onClick="numInput(8);">
+<input id="a9" type="button" value="9" class="num bottom" onClick="numInput(9);">
+<input id="cheng" type="button" value="×" class="sign bottom" onClick="signInput(4);"><br>
+<input id="a4" type="button" value="4" class="num bottom" onClick="numInput(4);">
+<input id="a5" type="button" value="5" class="num bottom" onClick="numInput(5);">
+<input id="a6" type="button" value="6" class="num bottom" onClick="numInput(6);">
+<input id="jian" type="button" value="-" class="sign bottom" onClick="signInput(3);"><br>
+<input id="a1" type="button" value="1" class="num bottom" onClick="numInput(1);">
+<input id="a2" type="button" value="2" class="num bottom" onClick="numInput(2);">
+<input id="a3" type="button" value="3" class="num bottom" onClick="numInput(3);">
+<input id="jia" type="button" value="+" class="sign bottom" onClick="signInput(2);"><br>
+<input type="button" value="±" class="sign bottom" onClick="signInput(6);">
+<input id="a0" type="button" value="0" class="num bottom" onClick="numInput(0);">
+<input id="dian" type="button" value="." class="sign bottom" onClick="signInput(1);">
+<input id="deng" type="button" value="=" class="sign bottom" onClick="signInput(0);">
+</div><!--left-->
+<div id="right" style="display:none;">
+<input type="button" value="^" class="sign bottom" onClick="signInput(11);">
+<input type="button" value="^2" class="sign bottom" onClick="signInput(12);">
+<input type="button" value="√" class="sign bottom" onClick="signInput(13);">
+<input type="button" value="2√" class="sign bottom" onClick="signInput(14);">
+<input type="button" value="Sin" class="sign bottom" onClick="signInput(15);">
+<input type="button" value="Cos" class="sign bottom" onClick="signInput(16);">
+<input type="button" value="Tan" class="sign bottom" onClick="signInput(17);">
+<input type="button" value="%" class="sign bottom" onClick="signInput(18);">
+<input type="button" value="1/x" class="sign bottom" onClick="signInput(19);">
+<input type="button" value="!" class="sign bottom" onClick="signInput(20);">
+<input type="button" value="Ln" class="sign bottom" onClick="signInput(21);">
+<input type="button" value="Lg" class="sign bottom" onClick="signInput(22);">
+<input type="button" value="e" class="sign bottom" onClick="signInput(23);">
+</div>
+</div>
+<script>
+//dragable("div");
+MoveDiv("div");
+</script>
+</body>
+</html>
