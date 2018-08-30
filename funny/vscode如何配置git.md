@@ -23,5 +23,6 @@
 
 接下来是测试连接  
 ssh -T git@github.com  
-ssh克隆方式 打开VS code 执行git克隆   git@github.com:xyz1178700373/xiaohao.git  
+ssh克隆方式 打开VS code 执行git克隆    
+类似这样的地址：git@github.com:username/name.git    
 在git中直接输入任意消息提交  
