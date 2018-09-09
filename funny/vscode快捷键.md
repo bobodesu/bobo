@@ -13,7 +13,7 @@ F1 或 Ctrl+Shift+P: 打开命令面板。在打开的输入框内，可以输�
 * : 跳转到行数，也可以 Ctrl+G 直接进入
 * @ 跳转到 symbol（搜索变量或者函数），也可以 Ctrl+Shift+O 直接进入
 * @ 根据分类跳转 symbol，查找属性或函数，也可以 Ctrl+Shift+O 后输入:进入
-* # 根据名字查找 symbol，也可以 Ctrl+T
+* \# 根据名字查找 symbol，也可以 Ctrl+T
 
 ## 编辑器与窗口管理
 * 打开一个新窗口： Ctrl+Shift+N
