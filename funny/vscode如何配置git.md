@@ -1,4 +1,4 @@
-异常解决，初始化数据库，然后重新克隆
+初始化数据库，然后重新克隆
 打开git-bash.exe
 1. cd ~/.ssh/
 2. git config --global user.name "名称"
