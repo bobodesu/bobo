@@ -25,7 +25,7 @@ bobo
 个人网站：[liubo.pro](https://liubo.pro)   
 weibo：[@bobodesu](https://weibo.com/bobodesu)    
 twitter：[@liubodesu](https://twitter.com/liubodesu)    
-email：bobodesu@163.com   
+email：[a@liubo.pro](mailto:a@liubo.pro)
   
 
 感谢您的浏览  
