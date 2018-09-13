@@ -3,7 +3,7 @@ bobo
 
 ## 简介
 
-此项目记录着本人平时分享关于各种方面的东西。如有兴趣的话我也愿意分享给大家，欢迎点击右上角star~~
+此项目记录着本人平时分享关于各种方面的东西。如有兴趣的话我也愿意分享给大家，欢迎点击右上角star~~  
 
 ---
 ## 项目文件介绍
@@ -13,7 +13,7 @@ bobo
 /funny/   ----> 技术文档、小技巧等等  
 /Project/ ----> 个人开发的小型项目、demo等  
 /myself/  ----> 个人的一些日记记事等等  
-
+/library/ ----> 收藏的一些开源库文件
 
 ---
 ## 个人介绍
@@ -21,15 +21,25 @@ bobo
 学生宅一枚，请多多关照O(∩_∩)O  
 联系我请私信或发送邮箱~~  
 
-どうぞよろしくお願いします。  
 
+个人网站：[liubo.pro](https://liubo.pro)   
 weibo：[@bobodesu](https://weibo.com/bobodesu)    
 twitter：[@liubodesu](https://twitter.com/liubodesu)    
-email：bobodesu@163.com  
+email：bobodesu@163.com   
   
-```cpp
-while(1){
-    bobo.IQ++;
+
+感谢您的浏览  
+  
+
+```js
+while(true){
+    //it's my life
+    bobodesu.code();
+    while(Math.random()>0.1){
+        bobodesu.repairBug();
+    }
+    bobodesu.eat();
+    bobodesu.sleep();
 }
 ```
 
@@ -39,4 +49,4 @@ while(1){
      
      
      
-最后简介更新日期：2018-8-31
+最后简介更新日期：2018-9-13
