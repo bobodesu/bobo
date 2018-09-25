@@ -15,6 +15,8 @@ using namespace std;
 #define all(x) x.begin(),x.end()
 #define cini(x) scanf("%d",&x)
 #define forn(x) for(int i=0;i<x;i++)
+#define pb push_back
+#define mp make_pair
 typedef long long ll;
 typedef int cint;
 
