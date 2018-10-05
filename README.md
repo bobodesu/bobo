@@ -22,7 +22,7 @@ bobo
 联系我请私信或发送邮箱~~  
 
 
-个人网站：[liubo.pro](https://liubo.pro)   
+个人网站：[liubo.pro](http://liubo.pro/?from=other(github))   
 weibo：[@bobodesu](https://weibo.com/bobodesu)    
 twitter：[@liubodesu](https://twitter.com/liubodesu)    
 email：[a@liubo.pro](mailto:a@liubo.pro)
