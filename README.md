@@ -1,12 +1,13 @@
-bobo
+# bobo
 =====
 
 ## 简介
 
-此项目记录着本人平时分享关于各种方面的东西。如有兴趣的话我也愿意分享给大家，欢迎点击右上角star~~  
+此库记录着本人平时分享关于各种方面的东西，有学习笔记、生活记事、收藏的一些东西等等。  
+如有兴趣的话可以逛逛，本人还有其他的开源项目可以供大家鉴赏，感谢您的浏览  
 
 ---
-## 项目文件介绍
+## 整体目录介绍
  
 /ACM/     ----> ACM文档  
 /learn/   ----> 学习笔记  
@@ -20,15 +21,13 @@ bobo
 
 学生宅一枚，请多多关照O(∩_∩)O  
 联系我请私信或发送邮箱~~  
-
-
+  
+  
 个人网站：[liubo.pro](http://liubo.pro/?from=other(github))   
 weibo：[@bobodesu](https://weibo.com/bobodesu)    
 twitter：[@liubodesu](https://twitter.com/liubodesu)    
 email：[a@liubo.pro](mailto:a@liubo.pro)
-  
 
-感谢您的浏览  
   
 
 ```js
@@ -49,4 +48,4 @@ while(true){
      
      
      
-最后简介更新日期：2018-9-13
+最后简介更新日期：2018-10-06
