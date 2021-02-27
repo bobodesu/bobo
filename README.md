@@ -28,22 +28,3 @@
 weibo：[@bobodesu](https://weibo.com/bobodesu)    
 twitter：[@liubodesu](https://twitter.com/liubodesu)    
 email：[a@liubo.pro](mailto:a@liubo.pro)
-  
-  
-  
-```js
-while(true){
-    //it's my life
-    bobodesu.code();
-    while(Math.random()>0.1){
-        bobodesu.repairBug();
-    }
-    bobodesu.eat();
-    bobodesu.sleep();
-}
-```
-
-
-![huaji](https://www.fuhaodq.com/d/file/fuhaotuan/2017-02-26/b6a60560245bcd9c46e4c5790366b4b9.jpg "huaji")  
-     
-     
